@@ -8,6 +8,6 @@
 #SBATCH --mem-per-cpu=32G
 
 ml reset
-ml restore convex_nn
+ml restore scnn
 
 eval $JOB_STR

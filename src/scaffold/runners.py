@@ -6,8 +6,8 @@ from typing import Dict
 from logging import Logger
 
 import lab
-from convex_nn.private.methods.callbacks import ObservedSignPatterns
-from convex_nn.private.initializers import get_initializer
+from scnn.private.methods.callbacks import ObservedSignPatterns
+from scnn.private.initializers import get_initializer
 
 from scaffold.models import get_model
 from scaffold.methods import get_method

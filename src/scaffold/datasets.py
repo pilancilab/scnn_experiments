@@ -13,7 +13,7 @@ from torch.utils import data
 from torchvision import datasets, transforms  # type: ignore
 
 import lab
-from convex_nn.private.utils.data import (
+from scnn.private.utils.data import (
     gen_regression_data,
     gen_classification_data,
     gen_sparse_regression_problem,

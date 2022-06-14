@@ -10,10 +10,10 @@ import torch
 
 import lab
 
-import convex_nn.activations as activations
-from convex_nn.private.models.convex import operators
+import scnn.activations as activations
+from scnn.private.models.convex import operators
 
-from convex_nn.private.models import (
+from scnn.private.models import (
     Model,
     LinearRegression,
     LogisticRegression,

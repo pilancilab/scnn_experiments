@@ -108,6 +108,7 @@ def get_torch_layer(
     bias = layer_config.get("bias", False)
     seed = layer_config.get("seed", None)
     layer: torch.nn.Module
+    X, y = train_set
 
     if name is None:
         raise ValueError(
@@ -164,11 +165,11 @@ def get_torch_layer(
 
     elif name.startswith("gated_relu"):
         U = activations.sample_gate_vectors(
-            gate_config.get("seed", 123),
-            d,
-            gate_config.get("n_samples", 100),
-            gate_config.get("gate_type", "dense"),
-            gate_config.get("order", 1),
+            layer_config.get("seed", 123),
+            in_features,
+            layer_config.get("n_samples", 100),
+            layer_config.get("gate_type", "dense"),
+            layer_config.get("order", 1),
         )
 
         D, U = activations.compute_activation_patterns(lab.to_np(X), U)

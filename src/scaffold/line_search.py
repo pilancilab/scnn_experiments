@@ -2,7 +2,7 @@
 Scaffolding for loading line-search components.
 """
 
-from convex_nn.private.methods.line_search import (
+from scnn.private.methods.line_search import (
     Backtracker,
     MultiplicativeBacktracker,
     LSCondition,

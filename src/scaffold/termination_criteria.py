@@ -3,7 +3,7 @@ Scaffolding for loading termination criteria.
 """
 from typing import Dict, Any
 
-from convex_nn.private.methods.termination_criteria import (
+from scnn.private.methods.termination_criteria import (
     TerminationCriterion,
     GradientNorm,
     StepLength,

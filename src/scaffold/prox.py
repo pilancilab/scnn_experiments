@@ -6,7 +6,7 @@ from typing import Optional, Dict, Any
 
 import lab
 
-from convex_nn.private.prox import (
+from scnn.private.prox import (
     ProximalOperator,
     Identity,
     L1,

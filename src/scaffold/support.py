@@ -6,13 +6,13 @@ from typing import Dict, Any, Tuple, Union, Optional, cast, Callable, List
 
 import lab
 
-from convex_nn.support import LinearSupportFinder, ForwardBackward
-from convex_nn.solvers import RFISTA, AL
-from convex_nn.models import ConvexReLU, ConvexGatedReLU
-from convex_nn.regularizers import NeuronGL1
-from convex_nn.activations import sample_gate_vectors
+from scnn.support import LinearSupportFinder, ForwardBackward
+from scnn.solvers import RFISTA, AL
+from scnn.models import ConvexReLU, ConvexGatedReLU
+from scnn.regularizers import NeuronGL1
+from scnn.activations import sample_gate_vectors
 
-from convex_nn.private.models import Model, ConvexMLP, AL_MLP
+from scnn.private.models import Model, ConvexMLP, AL_MLP
 
 
 def get_support(

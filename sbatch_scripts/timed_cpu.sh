@@ -9,6 +9,6 @@
 #SBATCH --constraint=CPU_SKU:7502
 
 ml reset
-ml restore convex_nn
+ml restore scnn
 
 eval $JOB_STR

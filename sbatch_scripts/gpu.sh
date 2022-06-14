@@ -10,6 +10,6 @@
 #SBATCH --constraint="GPU_SKU:RTX_2080Ti|GPU_SKU:V100_PCIE|GPU_SKU:V100S_PCIE"
 
 ml reset
-ml restore convex_nn
+ml restore scnn
 
 eval $JOB_STR

@@ -11,7 +11,7 @@ import torch
 
 import lab
 
-from convex_nn.private.models import (
+from scnn.private.models import (
     Model,
     ConvexMLP,
     AL_MLP,
@@ -19,21 +19,21 @@ from convex_nn.private.models import (
     AL_LassoNet,
 )
 
-from convex_nn.private.prox import ProximalOperator
+from scnn.private.prox import ProximalOperator
 
-from convex_nn.private.utils.linear import iterative_solvers
-from convex_nn.private.methods.method_utils import (
+from scnn.private.utils.linear import iterative_solvers
+from scnn.private.methods.method_utils import (
     init_batch_size,
     init_max_epochs,
 )
 
-from convex_nn.private.methods.optimization_procedures import (
+from scnn.private.methods.optimization_procedures import (
     METRIC_FREQ,
     ITER_LOG_FREQ,
     EPOCH_LOG_FREQ,
 )
 
-from convex_nn.private.methods import (
+from scnn.private.methods import (
     ConeDecomposition,
     ApproximateConeDecomposition,
     OptimizationProcedure,

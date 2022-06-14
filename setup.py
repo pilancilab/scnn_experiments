@@ -28,6 +28,6 @@ setup(
         "matplotlib",
         "lab @ git+https://git@github.com/aaronpmishkin/lab@icml_2022#egg=lab",
         "experiment_utils @ git+https://git@github.com/aaronpmishkin/experiment_utils@icml_2022#egg=experiment_utils",
-        "convex_nn @ git+https://git@github.com/aaronpmishkin/convex_nn@icml_2022#egg=convex_nn",
+        "scnn @ git+https://git@github.com/pilancilab/scnn@icml_2022#egg=scnn",
     ],
 )
