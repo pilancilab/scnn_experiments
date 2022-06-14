@@ -19,12 +19,8 @@ from convex_nn.private.models import (
     LogisticRegression,
     ReLUMLP,
     GatedReLUMLP,
-    GatedLassoNet,
-    ReLULassoNet,
     ConvexMLP,
-    ConvexLassoNet,
     AL_MLP,
-    AL_LassoNet,
     Regularizer,
     GroupL1Regularizer,
     FeatureGroupL1Regularizer,
@@ -33,7 +29,6 @@ from convex_nn.private.models import (
     L1Regularizer,
     L1SquaredRegularizer,
     OrthantConstraint,
-    LassoNetConstraint,
 )
 
 
@@ -42,8 +37,6 @@ from .torch_models import get_torch_mlp
 
 REQURIES_GATES = [
     "convex_mlp",
-    "convex_lasso_net",
-    "al_lasso_net",
     "al_mlp",
 ]
 
@@ -130,32 +123,6 @@ def get_model(
         if name == "convex_mlp":
             model = ConvexMLP(d, D, U, kernel, regularizer=regularizer, c=c)
 
-        elif name == "convex_lasso_net":
-            gamma = model_config.get("gamma", 0.0)
-            model = ConvexLassoNet(
-                d,
-                D,
-                U,
-                kernel,
-                regularizer=regularizer,
-                gamma=gamma,
-                c=c,
-            )
-
-        elif name == "al_lasso_net":
-            gamma = model_config.get("gamma", 0.0)
-            delta = model_config.get("delta", 1000.0)
-            model = AL_LassoNet(
-                d,
-                D,
-                U,
-                kernel,
-                regularizer=regularizer,
-                delta=delta,
-                gamma=gamma,
-                c=c,
-            )
-
         elif name == "al_mlp":
             delta = model_config.get("delta", 1000.0)
 
@@ -241,11 +208,6 @@ def get_regularizer(
         lam = config.get("lambda", 0.0)
 
         return L1SquaredRegularizer(lam)
-
-    elif name == "lasso_net":
-
-        M = config.get("M", 1.0)
-        return LassoNetConstraint(M)
 
     else:
         raise ValueError(

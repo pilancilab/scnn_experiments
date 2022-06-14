@@ -5,7 +5,7 @@ setup(
     version="0.0.1",
     author="Aaron Mishkin",
     author_email="amishkin@cs.stanford.edu",
-    description="Experiments for convex_nn submission.",
+    description="Experiments for ICML 2022 paper.",
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
@@ -26,8 +26,8 @@ setup(
         "tqdm",
         "opt-einsum",
         "matplotlib",
-        # "lab @ git+https://git@github.com/aaronpmishkin/lab@main#egg=lab",
-        # "experiment_utils @ git+https://git@github.com/aaronpmishkin/experiment_utils@main#egg=experiment_utils",
-        # "convex_nn @ git+https://git@github.com/aaronpmishkin/convex_nn@main#egg=convex_nn",
+        "lab @ git+https://git@github.com/aaronpmishkin/lab@icml_2022#egg=lab",
+        "experiment_utils @ git+https://git@github.com/aaronpmishkin/experiment_utils@icml_2022#egg=experiment_utils",
+        "convex_nn @ git+https://git@github.com/aaronpmishkin/convex_nn@icml_2022#egg=convex_nn",
     ],
 )

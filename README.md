@@ -4,7 +4,7 @@ This repository provides code to replicate the experiments in the paper [Fast Co
 
 ### Requirements
 
-Python 3.8 or newer. The necessary dependencies are listed in `requirements.txt`. 
+Python 3.8 or newer.
 
 ### Setup
 
@@ -13,8 +13,6 @@ Clone the repository using
 ```
 git clone https://github.com/aaronpmishkin/scnn_experiments.git
 ```
-
-#### MacOS/Unix
 
 We provide a script for easy setup on Unix systems. Run the `setup.sh` file with
 
@@ -25,15 +23,15 @@ We provide a script for easy setup on Unix systems. Run the `setup.sh` file with
 This will:
 
 1. Create a virtual environment in `.venv` and install the project dependencies. 
-3. Install `scaffold` in development mode.
-4. Create the `data`, `figures`, `tables`, and `results`  directories. 
+2. Install `scaffold` in development mode. This library contains infrastructure
+ for running our experiments.
+3. Create the `data`, `figures`, `tables`, and `results`  directories. 
 
 After running `setup.sh`, you need to activate the virtualenv using 
 
 ```
 source .venv/bin/activate
 ``` 
-
 
 ### Replications 
 
