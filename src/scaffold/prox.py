@@ -15,7 +15,6 @@ from scnn.private.prox import (
     FeatureGroupL1,
     Orthant,
     GroupL1Orthant,
-    HierProx,
 )
 
 
@@ -58,8 +57,6 @@ def get_proximal_op(
         assert D is not None and d is not None
         A = 2 * D - lab.ones_like(D)
         return GroupL1Orthant(d, lam=lam, A=A)
-    elif name == "hier_prox":
-        return HierProx(M)
 
     else:
         raise ValueError(

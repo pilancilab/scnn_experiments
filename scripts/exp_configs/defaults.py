@@ -148,7 +148,7 @@ SAGA = {
 AL = {
     "name": "augmented_lagrangian",
     "term_criterion": {
-        "name": "constrained_opt",
+        "name": "constrained_heuristic",
         "grad_tol": 1e-6,
         "constraint_tol": 1e-6,
     },
@@ -168,7 +168,7 @@ AL = {
 accAL = {
     "name": "acc_augmented_lagrangian",
     "term_criterion": {
-        "name": "constrained_opt",
+        "name": "constrained_heuristic",
         "grad_tol": 1e-6,
         "constraint_tol": 1e-6,
     },

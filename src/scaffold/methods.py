@@ -15,8 +15,6 @@ from scnn.private.models import (
     Model,
     ConvexMLP,
     AL_MLP,
-    ConvexLassoNet,
-    AL_LassoNet,
 )
 
 from scnn.private.prox import ProximalOperator
@@ -42,7 +40,6 @@ from scnn.private.methods import (
     DoubleLoopProcedure,
     ObservedSignPatterns,
     ls,
-    gradient_step,
     gd_ls,
     proximal_gradient_step,
     proximal_gradient_ls,
@@ -64,8 +61,6 @@ from scnn.private.methods import (
     CVXPYSolver,
     CVXPYGatedReLUSolver,
     CVXPYReLUSolver,
-    CVXPYReLULassoNetSolver,
-    CVXPYGatedLassoNetSolver,
     MinL2Decomposition,
     MinL1Decomposition,
     FeasibleDecomposition,
@@ -139,11 +134,7 @@ def get_method(
         solver_name = method_config.get("solver", "ecos")
         cvxpy_solver: CVXPYSolver
 
-        if isinstance(model, ConvexLassoNet):
-            cvxpy_solver = CVXPYGatedLassoNetSolver(solver_name)
-        elif isinstance(model, AL_LassoNet):
-            cvxpy_solver = CVXPYReLULassoNetSolver(solver_name)
-        elif isinstance(model, AL_MLP):
+        if isinstance(model, AL_MLP):
             cvxpy_solver = CVXPYReLUSolver(solver_name)
         elif isinstance(model, ConvexMLP):
             cvxpy_solver = CVXPYGatedReLUSolver(solver_name)

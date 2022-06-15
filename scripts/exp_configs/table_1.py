@@ -54,7 +54,7 @@ CONE_DECOMP["post_process"] = [
 AL = {
     "name": "augmented_lagrangian",
     "term_criterion": {
-        "name": "constrained_opt",
+        "name": "constrained_heuristic",
         "grad_tol": 1e-6,
         "constraint_tol": 1e-6,
     },

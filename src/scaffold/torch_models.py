@@ -9,8 +9,8 @@ import torch
 
 import lab
 
-import convex_nn.private.loss_functions as loss_fns
-from convex_nn.private.models import (
+import scnn.private.loss_functions as loss_fns
+from scnn.private.models import (
     Model,
     Regularizer,
     L1SquaredRegularizer,
@@ -18,7 +18,7 @@ from convex_nn.private.models import (
     LayerWrapper,
     GatedReLULayer,
 )
-import convex_nn.activations as activations
+import scnn.activations as activations
 
 
 def get_torch_mlp(
