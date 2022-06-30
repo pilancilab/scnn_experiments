@@ -3,7 +3,7 @@ Experiment configurations.
 """
 from typing import Dict, List
 
-max_iters = 500
+max_iters = 1000
 
 FISTA = {
     "name": ["fista"],
@@ -17,36 +17,43 @@ FISTA = {
         },
     ],
     "init_step_size": 0.1,
-    "term_criterion": {"name": "grad_norm"},
+    "term_criterion": {"name": "grad_norm", "tol": 1e-8},
     "prox": {"name": "group_l1"},
     "ls_type": ["prox_path_sm"],
     "max_iters": max_iters,
-    "batch_size": 20000,
     "metric_freq": 10,
     "restart_rule": "gradient_mapping",
 }
 
 
 EXPERIMENTS: Dict[str, List] = {
-    "cifar-10": [
+    "mnist_timing": [
         {
             "method": FISTA,
             "model": {
                 "name": "convex_mlp",
                 "kernel": "einsum",
-                "sign_patterns": {"name": "sampler", "n_samples": 4000, "conv_patterns": True},
+                "sign_patterns": {
+                    "name": "sampler",
+                    "n_samples": [1000, 2000, 5000],
+                },
                 "regularizer": {
                     "name": "group_l1",
-                    "lambda": [1e-3, 1e-4, 1e-5, 1e-6, 1e-7],
+                    "lambda": 1e-7,
                 },
                 "c": 10,
                 "initializer": {"name": "zero"},
             },
             "data": {
-                "name": "cifar_10",
+                "name": "mnist",
                 "transforms": [["to_tensor", "normalize", "flatten"]],
             },
             "metrics": (
+                ["objective", "grad_norm"],
+                [],
+                [],
+            ),
+            "final_metrics": (
                 ["objective", "accuracy", "squared_error", "grad_norm"],
                 ["accuracy", "squared_error"],
                 [
