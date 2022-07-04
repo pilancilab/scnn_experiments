@@ -8,7 +8,7 @@ from experiment_utils.plotting import defaults
 from experiment_utils.plotting.plot_cell import make_error_bar_plot
 from experiment_utils.plotting import plot_grid, plot_cell, defaults
 
-from plot_configs import constants
+import plot_constants as constants
 from scaffold.uci_names import UCI_BIN_SUBSET
 
 from exp_configs import EXPERIMENTS

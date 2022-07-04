@@ -7,7 +7,7 @@ from experiment_utils import configs
 
 from exp_configs import EXPERIMENTS  # type: ignore
 from plotting_utils.performance_profile import compute_obj_success_ratios  # type: ignore
-from plot_configs import constants  # type: ignore
+import plot_constants as constants  # type: ignore
 
 from matplotlib import pyplot as plt  # type: ignore
 

@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt  # type: ignore
 from experiment_utils import configs, utils, files, command_line
 from experiment_utils.plotting import plot_grid, plot_cell, defaults
 
-from plot_configs import constants  # type: ignore
+import plot_constants as constants  # type: ignore
 from exp_configs import EXPERIMENTS  # type: ignore
 from scaffold.uci_names import HYPERPLANE_ABLATIONS
 

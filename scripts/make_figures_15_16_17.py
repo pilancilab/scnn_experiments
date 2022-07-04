@@ -11,7 +11,7 @@ from scaffold.uci_names import PERFORMANCE_PROFILE
 
 from exp_configs import EXPERIMENTS  # type: ignore
 from plotting_utils.performance_profile import compute_success_ratios  # type: ignore
-from plot_configs import constants
+import plot_constants as constants
 
 from matplotlib import pyplot as plt  # type: ignore
 
