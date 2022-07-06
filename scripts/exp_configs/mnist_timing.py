@@ -50,7 +50,7 @@ TorchReLU = {
 
 TorchOptim = {
     "name": ["torch_adam", "torch_sgd"],
-    "step_size": [0.01, 0.1, 1, 2, 5],
+    "step_size": [0.001, 0.01, 0.1, 1, 5, 10],
     "batch_size": 0.1,
     "max_epochs": max_iters,
     "term_criterion": {"name": "grad_norm", "tol": 1e-10},
