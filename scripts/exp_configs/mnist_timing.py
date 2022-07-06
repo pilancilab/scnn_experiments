@@ -7,8 +7,8 @@ from typing import Dict, List
 import numpy as np
 
 max_iters = 10000
-convex_width = 2500
-non_convex_width = 500
+gated_width = 2500
+relu_width = 500
 arrangement_seed = 779
 lambda_to_try = [1e-7]
 
@@ -20,7 +20,7 @@ TorchGated = {
                 "name": "gated_relu",
                 "sign_patterns": {
                     "name": "sampler",
-                    "n_samples": non_convex_width,
+                    "n_samples": gated_width,
                     "seed": arrangement_seed,
                 },
             },
@@ -38,7 +38,7 @@ TorchReLU = {
         [
             {
                 "name": "relu",
-                "p": non_convex_width,
+                "p": relu_width,
             },
         ]
     ],
@@ -50,10 +50,10 @@ TorchReLU = {
 
 TorchOptim = {
     "name": ["torch_adam", "torch_sgd"],
-    "step_size": np.logspace(-5, 0, 6).tolist(),
+    "step_size": [0.01, 0.1, 1, 2, 5],
     "batch_size": 0.1,
     "max_epochs": max_iters,
-    "term_criterion": {"name": "grad_norm"},
+    "term_criterion": {"name": "grad_norm", "tol": 1e-10},
     "scheduler": {"name": "step", "step_length": 100, "decay": 0.5},
     "metric_freq": 10,
 }
@@ -71,7 +71,7 @@ FISTA = {
         },
     ],
     "init_step_size": 0.1,
-    "term_criterion": {"name": "grad_norm", "tol": 1e-6},
+    "term_criterion": {"name": "grad_norm", "tol": 1e-8},
     "prox": {"name": "group_l1"},
     "max_iters": max_iters,
     "metric_freq": 10,
@@ -84,7 +84,7 @@ GReLU_GL1 = {
     "kernel": "einsum",
     "sign_patterns": {
         "name": "sampler",
-        "n_samples": convex_width,
+        "n_samples": gated_width,
         "seed": arrangement_seed,
     },
     "regularizer": {
@@ -142,5 +142,6 @@ NonConvex = {
 }
 
 EXPERIMENTS: Dict[str, List] = {
-    "mnist_timing": [],
+    "mnist_timing_convex": [ConvexGated],
+    "mnist_timing_non_convex": [NonConvex],
 }
