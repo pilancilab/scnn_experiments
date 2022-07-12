@@ -21,10 +21,7 @@ repeat_key = ("repeat",)
 
 metrics = [
     "train_objective",
-    "train_grad_norm",
-    "train_nc_accuracy",
     "test_nc_accuracy",
-    "time",
 ]
 
 
@@ -43,10 +40,21 @@ def line_key_gen(exp_dict):
 processing_fns = []
 
 figure_labels = {
-    "x_labels": constants.x_labels,
+    "x_labels": {
+        "train_objective": "Time (S)",
+        "test_nc_accuracy": "Time (S)",
+    },
     "y_labels": {},
-    "col_titles": constants.y_labels,
+    "col_titles": {
+        "train_objective": "Training Objective",
+        "test_nc_accuracy": "Test Accuracy",
+    },
     "row_titles": {},
+}
+
+limits = {
+    "train_objective": ([0, 1000], None),
+    "test_nc_accuracy": ([0, 1000], [0.8, 1.01]),
 }
 
 settings = defaults.DEFAULT_SETTINGS
@@ -68,8 +76,8 @@ for dataset_name in datasets_to_plot:
 
     keep = [
         (("data", "name"), [dataset_name]),
-        (("method", "step_size"), [1, 0.1, 0.01]),
-        (("method", "name"), ["torch_adam", "fista"]),
+        # (("method", "step_size"), [1, 0.1, 0.01]),
+        # (("method", "name"), ["torch_sgd", "fista"]),
         # (("model", "regularizer", "lambda"), lambda_to_try),
     ]
     remove = []
@@ -78,80 +86,49 @@ for dataset_name in datasets_to_plot:
 
     def filter_fn(exp_config):
         model = exp_config["model"]
+
+        method = exp_config["method"]
+
+        keep = True
+
+        if method["name"] == "torch_adam":
+            keep = method["step_size"] == 0.1
+        elif method["name"] == "torch_sgd":
+            keep = method["step_size"] == 10
+
         if "hidden_layers" in model:
-            return model["hidden_layers"][0]["name"] == "relu"
+            return keep and model["hidden_layers"][0]["name"] == "gated_relu"
         else:
-            return True
+            return keep
 
     line_kwargs = {
         "fista": {
             "c": constants.line_colors[0],
             "label": "Convex",
             "linewidth": 3,
-        },
-        "torch_adam_1.0": {
-            "c": constants.line_colors[1],
-            "label": "Adam, ss: 1",
-            "linewidth": 3,
+            "marker": "v",
+            "markevery": 0.1,
+            "markersize": 8,
         },
         "torch_adam_0.1": {
+            "c": constants.line_colors[1],
+            "label": "Adam",
+            "linewidth": 3,
+            "marker": "D",
+            "markevery": 0.1,
+            "markersize": 8,
+        },
+        "torch_sgd_10": {
             "c": constants.line_colors[2],
-            "label": "Adam, ss: 0.1",
+            "label": "SGD",
             "linewidth": 3,
-        },
-        "torch_adam_0.01": {
-            "c": constants.line_colors[3],
-            "label": "Adam, ss: 0.01",
-            "linewidth": 3,
-        },
-        "torch_adam_0.001": {
-            "c": constants.line_colors[4],
-            "label": "Adam, ss: 0.001",
-            "linewidth": 3,
-        },
-        "torch_adam_0.0001": {
-            "c": constants.line_colors[5],
-            "label": "Adam, ss: 0.0001",
-            "linewidth": 3,
-        },
-        "torch_adam_1e-05": {
-            "c": constants.line_colors[6],
-            "label": "Adam, ss: e-5",
-            "linewidth": 3,
-        },
-        "torch_sgd_1.0": {
-            "c": constants.line_colors[7],
-            "label": "SGD, ss: 1",
-            "linewidth": 3,
-        },
-        "torch_sgd_0.1": {
-            "c": constants.line_colors[8],
-            "label": "SGD, ss: 0.1",
-            "linewidth": 3,
-        },
-        "torch_sgd_0.01": {
-            "c": constants.line_colors[9],
-            "label": "SGD, ss: 0.01",
-            "linewidth": 3,
-        },
-        "torch_sgd_0.001": {
-            "c": constants.line_colors[10],
-            "label": "SGD, ss: 0.001",
-            "linewidth": 3,
-        },
-        "torch_sgd_0.0001": {
-            "c": constants.line_colors[11],
-            "label": "SGD, ss: 0.0001",
-            "linewidth": 3,
-        },
-        "torch_sgd_1e-05": {
-            "c": constants.line_colors[12],
-            "label": "SGD, ss: e-5",
-            "linewidth": 3,
+            "marker": "X",
+            "markevery": 0.1,
+            "markersize": 8,
         },
     }
 
-    figure_labels["title"] = dataset_name
+    # figure_labels["title"] = dataset_name
     figure_labels = deepcopy(figure_labels)
 
     plot_config = deepcopy(
@@ -170,7 +147,7 @@ for dataset_name in datasets_to_plot:
             "figure_labels": figure_labels,
             "line_kwargs": line_kwargs,
             "log_scale": constants.log_scale,
-            "limits": constants.limits,
+            "limits": limits,
             "settings": settings,
         }
     )
