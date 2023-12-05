@@ -7,6 +7,7 @@ from logging import Logger
 
 import numpy as np
 import torch
+import xgboost as xgb
 
 import lab
 
@@ -20,6 +21,7 @@ from scnn.private.models import (
     ReLUMLP,
     GatedReLUMLP,
     ConvexMLP,
+    DeepConvexMLP,
     AL_MLP,
     Regularizer,
     GroupL1Regularizer,
@@ -41,10 +43,53 @@ REQURIES_GATES = [
 ]
 
 
+def get_xgb_model(
+    logger: Logger,
+    rng: np.random.Generator,
+    train_set: Tuple[lab.Tensor, lab.Tensor],
+    xgb_config: Dict[str, Any],
+):
+    assert xgb_config is not None
+
+    logger.info("Fitting XGBoost model.")
+    xg_boost = xgb.XGBClassifier(
+        random_state=xgb_config.get("seed", 650),
+        max_depth=xgb_config.get("depth", 2),
+        n_estimators=xgb_config.get("n_estimators", 100),
+    )
+    X_train, y_train = train_set
+
+    y_train_xgb = y_train.copy()
+    y_train_xgb[y_train_xgb == -1] = 0
+    xg_boost.fit(X_train, y_train_xgb)
+
+    return xg_boost
+
+
+class TreePatterns:
+    def __init__(self, xgb_model):
+        self.xgb_model = xgb_model
+
+    def __call__(self, X):
+        n, _ = X.shape
+        leaf_indices = self.xgb_model.apply(X)
+        unique_leaves = np.unique(leaf_indices)
+
+        D_list = []
+        for i in unique_leaves:
+            D_i = (leaf_indices == i) * 1.0
+            D_list.append(D_i)
+
+        D = np.concatenate(D_list, axis=-1)
+
+        return D
+
+
 def get_model(
     logger: Logger,
     rng: np.random.Generator,
     train_set: Tuple[lab.Tensor, lab.Tensor],
+    test_set: Tuple[lab.Tensor, lab.Tensor],
     model_config: Dict[str, Any],
     src_model: Optional[Model] = None,
 ) -> Union[Model, torch.nn.Module]:
@@ -52,6 +97,7 @@ def get_model(
     :param logger: a logger instance.
     :param rng: a random number generator.
     :param train_set: the training dataset.
+    :param test_set: the test dataset.
     :param model_config: a dictionary object specifying the desired
         model and its arguments.
     :param src_model: the output of a previous experiment for use creating/initializing the current model.
@@ -135,6 +181,39 @@ def get_model(
                 regularizer=regularizer,
                 c=c,
             )
+    elif name == "deep_convex_mlp":
+        xgb_model = get_xgb_model(
+            logger,
+            rng,
+            lab.all_to_np(train_set),
+            model_config.get("xgb_config", {}),
+        )
+        tree_patterns = TreePatterns(xgb_model)
+
+        D_train = tree_patterns(lab.to_np(train_set[0]))
+        D_test = tree_patterns(lab.to_np(test_set[0]))
+
+        # filter zero activations
+        non_zero_cols = np.logical_not(
+            np.all(D_train == np.zeros((n, 1)), axis=0)
+        )
+        D_train = D_train[:, non_zero_cols]
+        D_test = D_test[:, non_zero_cols]
+
+        D_train, D_test = lab.tensor(
+            D_train, dtype=lab.get_dtype()
+        ), lab.tensor(D_test, dtype=lab.get_dtype())
+
+        kernel = model_config.get("kernel", operators.EINSUM)
+        model = DeepConvexMLP(
+            d,
+            D_train,
+            tree_patterns,
+            kernel,
+            regularizer=regularizer,
+            c=c,
+            D_test=D_test,
+        )
 
     elif name.startswith("torch_mlp"):
         model = get_torch_mlp(

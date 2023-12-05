@@ -196,7 +196,6 @@ def get_method(
         divergence_check = method_config.get("divergence_check", True)
 
         if isinstance(model, torch.nn.Module):  # use PyTorch training loop
-
             batch_size = init_batch_size(train_set, batch_size)
 
             max_epochs = init_max_epochs(
@@ -326,7 +325,6 @@ def get_optimizer(
         )
 
     elif name == "augmented_lagrangian":
-
         return AugmentedLagrangian(
             use_delta_init=method_config.get("use_delta_init", True),
             subprob_tol=method_config.get("subprob_tol", 1e-6),
@@ -371,7 +369,6 @@ def get_optimizer(
 
         return torch.optim.Adagrad(model.parameters(), lr=step_size, eps=eps)
     elif name == "torch_lbfgs":
-
         # use default PyTorch parameters.
         max_iters_per_step = method_config.get("iters_per_step", 20)
         max_eval = method_config.get("max_eval", None)
@@ -402,7 +399,6 @@ def load_proximal_op(
     d: int,
     prox_config: Optional[Dict] = None,
 ) -> Optional[ProximalOperator]:
-
     # synchronize regularization parameters.
     lam: Union[float, lab.Tensor] = 0.0
     M = 1.0
@@ -424,7 +420,6 @@ def load_proximal_op(
 
 
 def get_callback(config: Dict[str, Any]) -> Callable:
-
     name = config.get("name", None)
     kwargs = config.get("kwargs", {})
     solver: CVXPYSolver

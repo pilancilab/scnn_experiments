@@ -49,7 +49,9 @@ def run_experiment(
         test_set = test_set[0][:, support], test_set[1]
 
     logger.info(f"Constructing model {exp_dict['model']['name']}.")
-    model = get_model(logger, rng, train_set, exp_dict["model"], src_model)
+    model = get_model(
+        logger, rng, train_set, test_set, exp_dict["model"], src_model
+    )
     logger.info(
         f"Initializing model at: {exp_dict['model'].get('initializer', {'name': 'zero'})['name']}."
     )

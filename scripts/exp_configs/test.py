@@ -6,7 +6,8 @@ from typing import Dict, List
 import numpy as np
 
 max_iters = 1000
-lam = np.logspace(-5, -1, 5).tolist()
+# lam = np.logspace(-5, -1, 5).tolist()
+lam = 1e-6
 
 FISTA_GL1 = {
     "name": "fista",
@@ -52,6 +53,19 @@ ConvexGated_GL1 = {
     },
 }
 
+DeepConvexNN = {
+    "name": "deep_convex_mlp",
+    "kernel": "einsum",
+    "xgb_config": {
+        "seed": 650,
+        "depth": 2,
+        "n_estimators": 200,
+    },
+    "regularizer": {
+        "name": "group_l1",
+        "lambda": lam,
+    },
+}
 
 ConvexRelu_GL1 = {
     "name": "al_mlp",
@@ -73,14 +87,14 @@ ConvexRelu_GL1 = {
 uci_data = {
     "name": [
         "breast-cancer",
-        # "monks-1",
-        # "planning",
-        # "spect",
-        # "haberman-survival",
-        # "twonorm",
-        # "trains",
-        # "iris",
-        # "ecoli"
+        "monks-1",
+        "planning",
+        "spect",
+        "haberman-survival",
+        "twonorm",
+        "trains",
+        "iris",
+        "ecoli"
     ],
     "split_seed": 1995,
     "use_valid": True,
@@ -112,6 +126,19 @@ Gated_EXPs = {
     "dtype": "float64",
 }
 
+Deep_Gated_EXPs = {
+    "method": FISTA_GL1,
+    "model": DeepConvexNN,
+    "data": uci_data,
+    "metrics": metrics,
+    "final_metrics": metrics,
+    "seed": 778,
+    "repeat": 1,
+    "backend": "numpy",
+    "device": "cpu",
+    "dtype": "float64",
+}
+
 Relu_EXPs = {
     "method": AL,
     "model": ConvexRelu_GL1,
@@ -126,5 +153,5 @@ Relu_EXPs = {
 }
 
 EXPERIMENTS: Dict[str, List] = {
-    "test": [Gated_EXPs, Relu_EXPs],
+    "test": [Deep_Gated_EXPs],
 }

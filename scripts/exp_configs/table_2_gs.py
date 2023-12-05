@@ -15,6 +15,8 @@ outer_iters = 5000
 max_total_iters = 10000
 arrangement_seed = 650
 lambda_to_try = np.logspace(-8, -3, 10).tolist()
+n_estimators_to_try = [100, 200, 300]
+depths_to_try = [2, 4]
 
 
 FISTA_GL1 = {
@@ -55,6 +57,23 @@ ConvexGated_GL1 = {
         "n_samples": gate_n_samples,
         "seed": arrangement_seed,
         "active_proportion": [0.5, None],
+    },
+    "regularizer": {
+        "name": "group_l1",
+        "lambda": lambda_to_try,
+    },
+    "initializer": [
+        {"name": "zero"},
+    ],
+}
+
+DeepConvexGated_GL1 = {
+    "name": "deep_convex_mlp",
+    "kernel": "einsum",
+    "xgb_config": {
+        "seed": 650,
+        "depth": depths_to_try,
+        "n_estimators": n_estimators_to_try,
     },
     "regularizer": {
         "name": "group_l1",
@@ -135,6 +154,21 @@ GATED_EXPS = {
     "dtype": "float32",
 }
 
+DEEP_GATED_EXPS = {
+    "method": FISTA_GL1,
+    "model": DeepConvexGated_GL1,
+    "data": uci_data,
+    "metrics": metrics,
+    "final_metrics": final_metrics,
+    "seed": 778,
+    "repeat": 1,
+    "backend": "torch",
+    "device": "cuda",
+    "dtype": "float32",
+}
+
+
 EXPERIMENTS: Dict[str, List] = {
     "table_2_gs": [ReLU_EXPS, GATED_EXPS],
+    "table_2_deep_gs": [DEEP_GATED_EXPS],
 }

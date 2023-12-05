@@ -168,7 +168,12 @@ def load_dataset(dataset_config: Dict[str, Any], data_dir: str = "data"):
         test_data = add_bias_col(test_data)
 
     if unitize_data_cols:
-        train_data, test_data, _ = unitize_columns(train_data, test_data)
+        train_data, test_data, _ = unitize_columns(
+            lab.all_to_np(train_data), lab.all_to_np(test_data)
+        )
+        train_data, test_data = lab.all_to_tensor(
+            train_data, dtype=lab.get_dtype()
+        ), lab.all_to_tensor(test_data, dtype=lab.get_dtype())
 
     return train_data, test_data
 
@@ -182,7 +187,6 @@ def load_uci_dataset(
     split_seed: int = 1995,
     n_folds: Optional[int] = None,
     fold_index: Optional[int] = None,
-    unitize_data_cols: bool = True,
 ) -> Tuple[Dataset, Dataset]:
     """Load one of the UCI datasets by name.
     :param name: the name of the dataset to load.
@@ -331,7 +335,6 @@ def load_pytorch_dataset(
             return lab.all_to_tensor(valid_set, dtype=lab.get_dtype())
 
     elif use_valid:
-
         train_set, valid_set = train_test_split(X, y, valid_prop, split_seed)
 
         if train:
