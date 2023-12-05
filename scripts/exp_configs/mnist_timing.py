@@ -49,8 +49,8 @@ TorchReLU = {
 }
 
 TorchOptim = {
-    "name": ["torch_adam", "torch_sgd"],
-    "step_size": [0.001, 0.01, 0.1, 1, 5, 10],
+    "name": ["torch_sgd"],
+    "step_size": [0.001, 0.01, 0.1, 1, 5, 10, 25, 50, 100],
     "batch_size": 0.1,
     "max_epochs": max_iters,
     "term_criterion": {"name": "grad_norm", "tol": 1e-10},
@@ -71,11 +71,11 @@ FISTA = {
         },
     ],
     "init_step_size": 0.1,
-    "term_criterion": {"name": "grad_norm", "tol": 1e-8},
+    "term_criterion": {"name": "grad_norm", "tol": 1e-10},
     "prox": {"name": "group_l1"},
     "max_iters": max_iters,
-    "metric_freq": 10,
     "restart_rule": "gradient_mapping",
+    "metric_freq": 10,
 }
 
 

@@ -72,14 +72,14 @@ ConvexRelu_GL1 = {
 
 uci_data = {
     "name": [
-        "breast-cancer",
+        #"breast-cancer",
         # "monks-1",
         # "planning",
         # "spect",
         # "haberman-survival",
         # "twonorm",
         # "trains",
-        # "iris",
+        "iris",
         # "ecoli"
     ],
     "split_seed": 1995,
@@ -121,7 +121,7 @@ Relu_EXPs = {
     "seed": 778,
     "repeat": 1,
     "backend": "numpy",
-    "device": "cpu",
+    "device": "cuda",
     "dtype": "float64",
 }
 

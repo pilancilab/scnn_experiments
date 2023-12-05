@@ -16,11 +16,11 @@ setup(
     packages=find_packages(where="src"),
     python_requires=">=3.6",
     install_requires=[
-        "numpy==1.21.3",
+        "numpy",
         "torch",
         "torchvision",
         "torchaudio",
-        "cvxpy==1.1.15",
+        "cvxpy",
         "scikit-learn",
         "scipy",
         "tqdm",
