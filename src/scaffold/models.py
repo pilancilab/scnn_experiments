@@ -84,7 +84,7 @@ class TreePatterns:
 
         D = np.concatenate(D_list, axis=-1)
 
-        return D
+        return D, unique_leaves
 
 
 def get_model(
