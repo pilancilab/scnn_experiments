@@ -70,10 +70,12 @@ class TreePatterns:
     def __init__(self, xgb_model):
         self.xgb_model = xgb_model
 
-    def __call__(self, X):
+    def __call__(self, X, unique_leaves=None):
         n, _ = X.shape
         leaf_indices = self.xgb_model.apply(X)
-        unique_leaves = np.unique(leaf_indices)
+
+        if unique_leaves is None:
+            unique_leaves = np.unique(leaf_indices)
 
         D_list = []
         for i in unique_leaves:
@@ -190,8 +192,8 @@ def get_model(
         )
         tree_patterns = TreePatterns(xgb_model)
 
-        D_train = tree_patterns(lab.to_np(train_set[0]))
-        D_test = tree_patterns(lab.to_np(test_set[0]))
+        D_train, unique_leaves = tree_patterns(lab.to_np(train_set[0]))
+        D_test, _ = tree_patterns(lab.to_np(test_set[0]), unique_leaves)
 
         # filter zero activations
         non_zero_cols = np.logical_not(
