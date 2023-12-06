@@ -220,4 +220,4 @@ try:
     }
 
 except:
-    pass
+    EXPERIMENTS = {}

@@ -57,12 +57,14 @@ def repeat_key(exp_dict):
 
 
 exp_ids = ["table_2_gs", "table_2_deep_gs"]
+# exp_ids = ["table_2_deep_gs"]
 # exp_ids = ["accuracy_gated", "accuracy_relu", "accuracy_nc_relu"]
 config_list: List[Dict] = reduce(
     lambda acc, eid: acc + EXPERIMENTS[eid], exp_ids, []
 )
 
 results_dir = [os.path.join("results", eid) for eid in exp_ids]
+variation_key = ("dtype")
 
 metric_grid = files.load_and_clean_experiments(
     config_list,
@@ -71,6 +73,7 @@ metric_grid = files.load_and_clean_experiments(
     row_key,
     line_key,
     repeat_key,
+    variation_key,
     utils.quantile_metrics,
     keep=[],
     remove=[],
@@ -118,3 +121,5 @@ print(best_params)
 # save parameters
 with open("scripts/exp_configs/table_2_best_params.pkl", "wb") as f:
     pkl.dump(best_params, f)
+
+EXPERIMENTS = {}
