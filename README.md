@@ -11,7 +11,7 @@ Python 3.8 or newer.
 Clone the repository using
 
 ```
-git clone https://github.com/aaronpmishkin/scnn_experiments.git
+git clone https://github.com/pilanci_lab/scnn_experiments.git
 ```
 
 We provide a script for easy setup on Unix systems. Run the `setup.sh` file with
