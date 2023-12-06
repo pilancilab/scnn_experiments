@@ -164,21 +164,18 @@ def load_dataset(dataset_config: Dict[str, Any], data_dir: str = "data"):
         )
 
     if add_bias or unitize_data_cols:
-        train_data, test_data, _ = unitize_columns(
-            lab.all_to_np(train_data), lab.all_to_np(test_data)
-        )
+        train_data = lab.all_to_np(train_data)
+        test_data = lab.all_to_np(test_data)
+
         if add_bias:
             train_data = add_bias_col(train_data)
             test_data = add_bias_col(test_data)
 
         if unitize_data_cols:
-            train_data, test_data, _ = unitize_columns(
-                lab.all_to_np(train_data), lab.all_to_np(test_data)
-            )
+            train_data, test_data, _ = unitize_columns(train_data, test_data)
 
-        train_data, test_data = lab.all_to_tensor(
-            train_data, dtype=lab.get_dtype()
-        ), lab.all_to_tensor(test_data, dtype=lab.get_dtype())
+        train_data = lab.all_to_tensor(train_data, dtype=lab.get_dtype())
+        test_data = lab.all_to_tensor(test_data, dtype=lab.get_dtype())
 
     return train_data, test_data
 
