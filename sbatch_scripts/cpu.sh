@@ -9,7 +9,7 @@
 
 
 ml reset
-ml restore teleport
+ml restore scnn
 source .venv/bin/activate
 
 eval "$JOB_STR -I $SLURM_ARRAY_TASK_ID"
