@@ -163,14 +163,19 @@ def load_dataset(dataset_config: Dict[str, Any], data_dir: str = "data"):
             f"Dataset with name {name} not recognized! Please configure it first."
         )
 
-    if add_bias:
-        train_data = add_bias_col(train_data)
-        test_data = add_bias_col(test_data)
-
-    if unitize_data_cols:
+    if add_bias or unitize_data_cols:
         train_data, test_data, _ = unitize_columns(
             lab.all_to_np(train_data), lab.all_to_np(test_data)
         )
+        if add_bias:
+            train_data = add_bias_col(train_data)
+            test_data = add_bias_col(test_data)
+
+        if unitize_data_cols:
+            train_data, test_data, _ = unitize_columns(
+                lab.all_to_np(train_data), lab.all_to_np(test_data)
+            )
+
         train_data, test_data = lab.all_to_tensor(
             train_data, dtype=lab.get_dtype()
         ), lab.all_to_tensor(test_data, dtype=lab.get_dtype())
