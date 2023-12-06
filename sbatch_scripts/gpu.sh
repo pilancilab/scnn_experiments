@@ -9,7 +9,10 @@
 #SBATCH --mem-per-gpu=24G
 #SBATCH --constraint="GPU_SKU:RTX_2080Ti|GPU_SKU:V100_PCIE|GPU_SKU:V100S_PCIE"
 
-ml reset
-ml restore scnn
 
-eval $JOB_STR
+
+ml reset
+ml restore teleport 
+source .venv/bin/activate
+
+eval "$JOB_STR -I $SLURM_ARRAY_TASK_ID"
