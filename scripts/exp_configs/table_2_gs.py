@@ -109,6 +109,15 @@ uci_data = {
     "add_bias": True,
 }
 
+uci_data_tuning = {
+    "name": BINARY_SMALL_UCI_DATASETS,
+    "split_seed": 1995,
+    "n_folds": 5,
+    "fold_index": list(range(5)),
+    "add_bias": [True, False],
+    "unitize_data_cols": [True, False],
+}
+
 metrics = (
     ["objective", "grad_norm"],
     [],
@@ -157,7 +166,7 @@ GATED_EXPS = {
 DEEP_GATED_EXPS = {
     "method": FISTA_GL1,
     "model": DeepConvexGated_GL1,
-    "data": uci_data,
+    "data": uci_data_tuning,
     "metrics": metrics,
     "final_metrics": final_metrics,
     "seed": 778,

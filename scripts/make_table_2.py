@@ -13,14 +13,40 @@ from scaffold.uci_names import BINARY_SMALL_UCI_DATASETS
 from experiment_utils import utils, files
 from exp_configs import EXPERIMENTS  # type: ignore
 
+row = ("data", "name")
+
+
+def line(exp_dict):
+    method = exp_dict["method"]
+    key = method["name"]
+    xgb_config = exp_dict["model"].get("xgb_config", None)
+
+    if xgb_config is not None:
+        key = f"{key}_deep"
+
+    return key
+
+
+def repeat(exp_dict):
+    xgb_config = exp_dict["model"].get("xgb_config", None)
+
+    if xgb_config is not None:
+        return xgb_config["seed"]
+    else:
+        return exp_dict["model"]["sign_patterns"]["seed"]
+
+
+variation = "dtype"
+
 # load neural network results
 metric_grid = files.load_and_clean_experiments(
     EXPERIMENTS["table_2_final"] + EXPERIMENTS["table_2_final_deep"],
     ["results/table_2_final", "results/table_2_final_deep"],
     ["test_nc_accuracy"],
-    ("data", "name"),
-    ("method", "name"),
-    ("model", "sign_patterns", "seed"),
+    row,
+    line,
+    repeat,
+    variation,
     partial(utils.quantile_metrics, quantiles=(0.0, 1.0)),
     keep=[],
     remove=[],
@@ -174,9 +200,7 @@ for dataset_name in dataset_list:
 
     all_results[dataset_name] = res
 
-result_str = (
-    "Dataset, C-GReLU, C-ReLU, Random Forest, Linear SVM, Kernel SVM \n"
-)
+result_str = "Dataset, C-GReLU, C-ReLU, Deep C-GReLU, Random Forest, Linear SVM, Kernel SVM \n"
 
 result_keys = list(all_results.keys())
 result_keys.sort()
@@ -189,9 +213,13 @@ for key in result_keys:
     relu = flipped_grid[key]["augmented_lagrangian"]["test_nc_accuracy"][
         "upper"
     ][-1]
+    deep_grelu = flipped_grid[key]["fista_deep"]["test_nc_accuracy"]["upper"][
+        -1
+    ]
 
     result_str = result_str + ", " + str(round(grelu * 100, 1))
     result_str = result_str + ", " + str(round(relu * 100, 1))
+    result_str = result_str + ", " + str(round(deep_grelu * 100, 1))
     result_str = result_str + ", " + str(round(value[0][2] * 100, 1))
     result_str = result_str + ", " + str(round(value[1][2] * 100, 1))
     result_str = result_str + ", " + str(round(value[2][2] * 100, 1))
