@@ -87,7 +87,7 @@ DeepConvexGated_GL1 = {
     "name": "deep_convex_mlp",
     "kernel": "einsum",
     "xgb_config": {
-        "seed": 650,
+        "seed": arrangement_seed,
         "depth": None,
         "n_estimators": None,
     },

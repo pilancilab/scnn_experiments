@@ -15,8 +15,8 @@ from exp_configs import EXPERIMENTS  # type: ignore
 
 # load neural network results
 metric_grid = files.load_and_clean_experiments(
-    EXPERIMENTS["table_2_final"],
-    ["results/table_2_final"],
+    EXPERIMENTS["table_2_final"] + EXPERIMENTS["table_2_final_deep"],
+    ["results/table_2_final", "results/table_2_final_deep"],
     ["test_nc_accuracy"],
     ("data", "name"),
     ("method", "name"),
