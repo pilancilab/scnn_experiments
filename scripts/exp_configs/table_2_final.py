@@ -83,6 +83,23 @@ ConvexRelu_GL1 = {
     "delta": 100,
 }
 
+DeepConvexGated_GL1 = {
+    "name": "deep_convex_mlp",
+    "kernel": "einsum",
+    "xgb_config": {
+        "seed": 650,
+        "depth": None,
+        "n_estimators": None,
+    },
+    "regularizer": {
+        "name": "group_l1",
+        "lambda": None,
+    },
+    "initializer": [
+        {"name": "zero"},
+    ],
+}
+
 uci_data = {
     "name": BINARY_SMALL_UCI_DATASETS,
     "split_seed": 1995,
@@ -138,8 +155,22 @@ try:
         "dtype": "float32",
     }
 
+    deep_convex_gated = {
+        "method": FISTA_GL1,
+        "model": DeepConvexGated_GL1,
+        "data": uci_data,
+        "metrics": metrics,
+        "final_metrics": final_metrics,
+        "seed": 778,
+        "repeat": 1,
+        "backend": "torch",
+        "device": "cuda",
+        "dtype": "float32",
+    }
+
     expanded_gated = configs.expand_config(convex_gated)
     expanded_relu = configs.expand_config(convex_relu)
+    expanded_deep = configs.expand_config(deep_convex_gated)
 
     fista_configs = []
 
@@ -165,8 +196,28 @@ try:
         ]["augmented_lagrangian"]["key"][2]
         al_configs.append(best_al)
 
+    deep_configs = []
+
+    for config in expanded_deep:
+        best_deep = deepcopy(config)
+        best_deep["model"]["regularizer"]["lambda"] = best_params[
+            config["data"]["name"]
+        ]["fista_deep"]["key"][1]
+
+        best_deep["model"]["xgb_config"]["depth"] = best_params[
+            config["data"]["name"]
+        ]["fista_deep"]["key"][2][0]
+
+        best_deep["model"]["xgb_config"]["n_estimators"] = best_params[
+            config["data"]["name"]
+        ]["fista_deep"]["key"][2][1]
+
+        deep_configs.append(best_deep)
+
     EXPERIMENTS: Dict[str, List] = {
         "table_2_final": fista_configs + al_configs,
+        "table_2_final_deep": deep_configs,
     }
+
 except:
     pass

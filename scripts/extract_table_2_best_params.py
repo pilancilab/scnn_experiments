@@ -39,8 +39,15 @@ def line_key(exp_dict):
 
     sign_patterns = exp_dict["model"].get("sign_patterns", None)
     prop = None
+
     if sign_patterns is not None:
         prop = sign_patterns.get("active_proportion", None)
+
+    xgb_config = exp_dict["model"].get("xgb_config", None)
+
+    if xgb_config is not None:
+        prop = (xgb_config["depth"], xgb_config["n_estimators"])
+        key = f"{key}_deep"
 
     return (key, step_size, lam, prop)
 
@@ -49,7 +56,7 @@ def repeat_key(exp_dict):
     return (exp_dict["seed"], exp_dict["data"]["fold_index"])
 
 
-exp_ids = ["table_2_gs"]
+exp_ids = ["table_2_gs", "table_2_deep_gs"]
 # exp_ids = ["accuracy_gated", "accuracy_relu", "accuracy_nc_relu"]
 config_list: List[Dict] = reduce(
     lambda acc, eid: acc + EXPERIMENTS[eid], exp_ids, []
