@@ -46,7 +46,12 @@ def line_key(exp_dict):
     xgb_config = exp_dict["model"].get("xgb_config", None)
 
     if xgb_config is not None:
-        prop = (xgb_config["depth"], xgb_config["n_estimators"])
+        data_config = exp_dict["data"]
+        key = f"{key}_{data_config['add_bias']}_{data_config['unitize_data_cols']}"
+        prop = (
+            xgb_config["depth"],
+            xgb_config["n_estimators"],
+        )
         key = f"{key}_deep"
 
     return (key, step_size, lam, prop)
@@ -64,7 +69,7 @@ config_list: List[Dict] = reduce(
 )
 
 results_dir = [os.path.join("results", eid) for eid in exp_ids]
-variation_key = ("dtype")
+variation_key = "dtype"
 
 metric_grid = files.load_and_clean_experiments(
     config_list,
@@ -97,7 +102,7 @@ for dataset in flipped_grid.keys():
     if dataset not in best_params:
         best_params[dataset] = {}
 
-    for (method, step_size, lam, prop) in flipped_grid[dataset].keys():
+    for method, step_size, lam, prop in flipped_grid[dataset].keys():
         nc_accuracy = flipped_grid[dataset][(method, step_size, lam, prop)][
             "test_nc_accuracy"
         ]["center"][-1]

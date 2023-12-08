@@ -3,10 +3,12 @@ Initial attempt at performance profiles.
 """
 from copy import deepcopy
 from typing import Dict, List
-import numpy as np
+from itertools import product
 import pickle as pkl
-from experiment_utils import configs
 
+import numpy as np
+
+from experiment_utils import configs
 from scaffold.uci_names import BINARY_SMALL_UCI_DATASETS
 
 
@@ -198,21 +200,23 @@ try:
 
     deep_configs = []
 
-    for config in expanded_deep:
-        best_deep = deepcopy(config)
-        best_deep["model"]["regularizer"]["lambda"] = best_params[
-            config["data"]["name"]
-        ]["fista_deep"]["key"][1]
+    for bias, unitize in product([True, False], [True, False]):
+        key = f"fista_{bias}_{unitize}_deep"
+        for config in expanded_deep:
+            best_deep = deepcopy(config)
+            best_deep["model"]["regularizer"]["lambda"] = best_params[
+                config["data"]["name"]
+            ][key]["key"][1]
 
-        best_deep["model"]["xgb_config"]["depth"] = best_params[
-            config["data"]["name"]
-        ]["fista_deep"]["key"][2][0]
+            best_deep["model"]["xgb_config"]["depth"] = best_params[
+                config["data"]["name"]
+            ][key]["key"][2][0]
 
-        best_deep["model"]["xgb_config"]["n_estimators"] = best_params[
-            config["data"]["name"]
-        ]["fista_deep"]["key"][2][1]
+            best_deep["model"]["xgb_config"]["n_estimators"] = best_params[
+                config["data"]["name"]
+            ][key]["key"][2][1]
 
-        deep_configs.append(best_deep)
+            deep_configs.append(best_deep)
 
     EXPERIMENTS: Dict[str, List] = {
         "table_2_final": fista_configs + al_configs,
