@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "scaffold"
+version = "0.0.1"
+authors = [
+  { name="Aaron Mishkin", email="amishkin@cs.stanford.edu" },
+]
+description = "Experiments for ICML 2022 paper."
+readme = "README.md"
+license = { file="LICENSE" }
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "numpy==1.26.4",
+    "torch",
+    "torchvision",
+    "torchaudio",
+    "cvxpy",
+    "scikit-learn",
+    "scipy",
+    "tqdm",
+    "opt-einsum",
+    "matplotlib",
+    "lab @ git+https://git@github.com/aaronpmishkin/lab@icml_2022#egg=lab",
+    "experiment_utils @ git+https://git@github.com/aaronpmishkin/experiment_utils@icml_2022#egg=experiment_utils",
+    "pyscnn @ git+https://git@github.com/pilancilab/scnn#egg=pyscnn",
+]
+
+[tool.setuptools.package-data]
+scaffold = ["py.typed"]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[project.urls]
+"Homepage" = "https://github.com/pilancilab/scnn_experiments"
+"Bug Tracker" = "https://github.com/pilancilab/scnn_experiments/issues"
