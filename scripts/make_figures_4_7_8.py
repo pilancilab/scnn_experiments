@@ -86,7 +86,6 @@ def problem_key(exp_dict):
 
 
 def filter_result(exp_metrics, exp_config):
-
     """Remove experiments corresponding to null models."""
     if (
         exp_metrics["active_neurons"][-1]
@@ -110,15 +109,20 @@ def compute_xy_values_tol(exp_metrics, exp_config, min_obj, tol):
         "train_nc_objective" in exp_metrics
         and exp_metrics["train_nc_objective"][-1] != -1
     ):
-        best_obj = np.min(exp_metrics["train_nc_objective"])
-        best_ind = np.argmin(exp_metrics["train_nc_objective"])
+        obj = exp_metrics["train_nc_objective"]
     else:
-        best_obj = np.min(exp_metrics["train_objective"])
-        best_ind = np.argmin(exp_metrics["train_objective"])
+        obj = exp_metrics["train_objective"]
 
-    rel_diff = (best_obj - min_obj) / min_obj
+    start_obj = obj[0]
+    max_obj = np.max(obj)
 
-    success = rel_diff <= tol
+    if np.isnan(max_obj):
+        max_obj = np.inf
+
+    rel_diff = (obj - min_obj) / min_obj
+    thresholded_tols = rel_diff <= tol
+    success = np.any(thresholded_tols) and (max_obj < start_obj * 10)
+    best_ind = np.argmax(thresholded_tols)
 
     if success:
         time = np.sum(time_list[0 : best_ind + 1])
@@ -165,7 +169,7 @@ for tol in tol_list:
     spec = fig.add_gridspec(ncols=2, nrows=1)
     ax0 = fig.add_subplot(spec[0, 0])
 
-    ax0.set_ylim(0, 1)
+    # ax0.set_ylim(0, 1)
     ax0.set_xscale("log")
     ax0.set_xlim(min_x, max_x)
 
@@ -183,15 +187,13 @@ for tol in tol_list:
 
     ax0.axhline(y=0.50, linestyle="--", linewidth="4", c="k")
     ax0.set_title("Gated ReLU Activations", fontsize=settings["subtitle_fs"])
-    ax0.set_ylabel(
-        "Prop. of Problems Solved", fontsize=settings["axis_labels_fs"]
-    )
+    ax0.set_ylabel("Prop. of Problems Solved", fontsize=settings["axis_labels_fs"])
     ax0.set_xlabel("Time (Seconds)", fontsize=settings["axis_labels_fs"])
     ax0.tick_params(labelsize=settings["tick_fs"])
 
     ax1 = fig.add_subplot(spec[0, 1])
 
-    ax1.set_ylim(0, 1)
+    # ax1.set_ylim(0, 1)
     ax1.set_xscale("log")
     # ax1.set_xlim(min_x, max_x)
 
