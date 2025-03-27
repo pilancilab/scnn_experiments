@@ -10,5 +10,6 @@
 
 ml reset
 ml restore scnn
+source venv/bin/activate
 
 eval $JOB_STR
